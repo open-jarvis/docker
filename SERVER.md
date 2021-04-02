@@ -4,18 +4,21 @@ TODO
 
 ## Developers
 
-Run the following commands inside an ubuntu docker container:
+To reproduce the server container run the following commands:
+
 
 ``` bash
-apt update
-apt install -y git curl wget python3 python3-pip mosquitto python3-paho-mqtt sudo nano
-pip install --upgrade --no-deps open-jarvis pyOpenSSL couchdb2
+docker run -it -t debian /bin/bash
 
-#=================================================
-# ON RASPERRY PI:
+apt update
+apt install -y git curl wget python3 python3-pip mosquitto python3-paho-mqtt sudo
+
+pip3 install --upgrade --no-deps open-jarvis pyOpenSSL couchdb2
+
 wget http://packages.erlang-solutions.com/debian/erlang_solutions.asc
-sudo apt-key add erlang_solutions.asc
-sudo apt-get update
+apt-key add erlang_solutions.asc
+apt update
+
 
 # Download libffi6
 wget http://ftp.br.debian.org/debian/pool/main/libf/libffi/libffi6_3.2.1-6_armhf.deb
@@ -30,23 +33,22 @@ wget http://ftp.br.debian.org/debian/pool/main/m/mozjs/libmozjs185-dev_1.8.5-1.0
 # Install libffi6
 sudo dpkg -i libffi6_3.2.1-6_armhf.deb 
 
-apt --fix-broken install
+# Sometimes the dpkg breaks packages
+apt --fix-broken install -y
 
 # Install libmozjs185-1.0
-sudo dpkg -i libmozjs185-1.0_1.8.5-1.0.0+dfsg-6_armhf.deb 
+dpkg -i libmozjs185-1.0_1.8.5-1.0.0+dfsg-6_armhf.deb 
+
+# Sometimes the dpkg breaks packages
+apt --fix-broken install -y
 
 # Install libmozjs185-dev
-sudo dpkg -i libmozjs185-dev_1.8.5-1.0.0+dfsg-6_armhf.deb 
+dpkg -i libmozjs185-dev_1.8.5-1.0.0+dfsg-6_armhf.deb 
 
 # Fix eventual missing dependencies
-sudo apt --fix-broken install
+apt --fix-broken install -y
 
-
-
-# install essentials
-sudo apt-get --no-install-recommends -y install build-essential \
-pkg-config erlang libicu-dev libcurl4-openssl-dev #/
-# libmozjs185-dev 
+apt --no-install-recommends -y install build-essential pkg-config erlang libicu-dev libcurl4-openssl-dev
 
 
 # create couchdb user and directories
@@ -59,10 +61,6 @@ sudo mkdir $COUCHDB_DIR/logs
 sudo touch $COUCHDB_DIR/logs/stdout.log
 sudo touch $COUCHDB_DIR/logs/stderr.log
 
-# install service file
-sudo wget https://raw.githubusercontent.com/open-jarvis/jarvis/master/web/scripts/couchdb.service -q -O /etc/systemd/system/couchdb.service
-
-# Get source - need URL for mirror (see post instructions, above)
 wget https://mirror.klaus-uwe.me/apache/couchdb/source/3.1.1/apache-couchdb-3.1.1.tar.gz
 tar zxvf apache-couchdb-3.1.1.tar.gz
 cd apache-couchdb-3.1.1
@@ -79,12 +77,6 @@ cd $COUCHDB_DIR/etc
 
 # change access rights
 sudo chmod 666 $COUCHDB_DIR/etc/local.ini
-
-echo "########## MODIFY /home/couchdb/etc/local.ini ##########"
-echo "change ';admin = password' to 'jarvis = jarvis'"
-echo "change ';bind_address = 127.0.0.1' to 'bind_address = 0.0.0.0'"
-echo "########################################################"
-
 
 apt install libatlas3-base libgfortran5
 
@@ -103,20 +95,6 @@ sudo pip3 install snips_nlu-0.20.2-py3-none-any.whl
 
 sudo snips-nlu download de
 sudo snips-nlu download en
-#=================================================
-
-
-#=================================================
-# ON UBUNTU
-curl -L https://couchdb.apache.org/repo/bintray-pubkey.asc | apt-key add -
-echo "deb https://apache.bintray.com/couchdb-deb focal main" | tee -a /etc/apt/sources.list
-apt update
-apt install -y couchdb # choose "standalone", "0.0.0.0", "admin", "admin"
-
-pip3 install snips_nlu
-snips-nlu download de
-snips-nlu download en
-#=================================================
 
 mkdir /usr/local/lib/python3.7/dist-packages/couchdb2
 echo "from .couchdb2 import *" > /usr/local/lib/python3.7/dist-packages/couchdb2/__init__.py

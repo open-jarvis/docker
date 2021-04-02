@@ -1,2 +1,2 @@
-FROM openjarvis/server
-CMD /bin/bash "/starter" ; /bin/bash
+FROM openjarvis/jarvis
+CMD /bin/bash "/starter"

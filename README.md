@@ -1,10 +1,15 @@
 # Jarvis Docker
 
-This repository contains Docker compose files for an easy installation of Jarvis services
+This repository contains Docker files for an easy installation of Jarvis services
 
-## Docker Images
-* [Jarvis Server](server)
-* [Jarvis Web UI](web)
+## Installation
+
+```bash
+git clone https://github.com/open-jarvis/docker
+cd docker
+docker build -t jarvis:latest .
+docker run -d --restart unless-stopped -p 80:80 -p 1883:1883 -p 2021:2021 -p 5984:5984 -v /jarvis-data:/home/couchdb/data jarvis:latest
+```
 
 
 ### For Developers
@@ -12,7 +17,7 @@ This repository contains Docker compose files for an easy installation of Jarvis
 To reproduce the docker container, run the following commands:
 
 ``` bash
-docker run -it -p 5984:5984 -p 2021:2021 -p 1883:1883 -p 80:80 -v /jarvis/docker-couchdb-data:/opt/couchdb/data -t debian /bin/bash
+docker run -it -t debian /bin/bash
 
 apt update
 apt install -y git curl wget python3 python3-pip mosquitto python3-paho-mqtt sudo
@@ -82,4 +87,47 @@ cd $COUCHDB_DIR/etc
 # change access rights
 sudo chmod 666 $COUCHDB_DIR/etc/local.ini
 
+apt install libatlas3-base libgfortran5
+
+cd /root
+wget --content-disposition https://github.com/jr-k/snips-nlu-rebirth/blob/master/wheels/scipy-1.3.3-cp37-cp37m-linux_armv7l.whl?raw=true
+wget --content-disposition https://github.com/jr-k/snips-nlu-rebirth/blob/master/wheels/scikit_learn-0.22.1-cp37-cp37m-linux_armv7l.whl?raw=true
+wget --content-disposition https://github.com/jr-k/snips-nlu-rebirth/blob/master/wheels/snips_nlu_utils-0.9.1-cp37-cp37m-linux_armv7l.whl?raw=true
+wget --content-disposition https://github.com/jr-k/snips-nlu-rebirth/blob/master/wheels/snips_nlu_parsers-0.4.3-cp37-cp37m-linux_armv7l.whl?raw=true
+wget --content-disposition https://github.com/jr-k/snips-nlu-rebirth/blob/master/wheels/snips_nlu-0.20.2-py3-none-any.whl?raw=true
+
+sudo pip3 install scipy-1.3.3-cp37-cp37m-linux_armv7l.whl
+sudo pip3 install scikit_learn-0.22.1-cp37-cp37m-linux_armv7l.whl
+sudo pip3 install snips_nlu_utils-0.9.1-cp37-cp37m-linux_armv7l.whl
+sudo pip3 install snips_nlu_parsers-0.4.3-cp37-cp37m-linux_armv7l.whl
+sudo pip3 install snips_nlu-0.20.2-py3-none-any.whl
+
+sudo snips-nlu download de
+sudo snips-nlu download en
+
+mkdir /usr/local/lib/python3.7/dist-packages/couchdb2
+echo "from .couchdb2 import *" > /usr/local/lib/python3.7/dist-packages/couchdb2/__init__.py
+wget https://github.com/pekrau/CouchDB2/blob/master/couchdb2.py?raw=true -O /usr/local/lib/python3.7/dist-packages/couchdb2/couchdb2.py
+
+/home/couchdb/bin/couchdb &
+
+# THIS IS WHERE WE PULL STUFF FROM THE 
+# JARVIS REPOS
+
+git clone https://github.com/open-jarvis/server
+cd server
+python3 setup.py
+
+echo "/home/couchdb/bin/couchdb &" > /starter
+echo "/usr/sbin/mosquitto &" >> /starter
+echo "/bin/sleep 3" >> /starter
+echo "/usr/bin/python3 /jarvis/server/jarvisd.py &" >> /starter
+
+cd /jarvis/web
+git clone https://github.com/open-jarvis/web .
+pip3 install flask flask_babel
+
+echo "/usr/bin/python3 /jarvis/web/html/webui.py &" >> /starter
+
+chmod a+x /starter
 ```

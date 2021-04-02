@@ -1,0 +1,22 @@
+services:
+    jarvis:
+        image: "openjarvis/jarvis"
+        ports:
+            - "80:80"
+            - "1883:1883"
+            - "2021:2021"
+            - "5984:5984"
+        volumes:
+            - "/jarvis/database:/home/couchdb/data"
+            - "/jarvis:/jarvis"
+        restart: "always"
+        command: "/starter"
+        hostname: jarvis
+        container_name: jarvis_full
+    updater:
+        image: "openjarvis/updater"
+        volumes:
+            - "/jarvis:/jarvis"
+        command: "/starter"
+        depends_on:
+            - jarvis
