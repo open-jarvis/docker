@@ -30,7 +30,7 @@ chmod a+x /starter
 
 
 # remove data
-apt purge python3-pip wget
+apt purge -y python3-pip wget
 apt clean
-apt autoremove
+apt autoremove -y
 ```

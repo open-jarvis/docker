@@ -1,3 +1,4 @@
+version: '3'
 services:
     jarvis:
         image: "openjarvis/jarvis"
@@ -10,13 +11,17 @@ services:
             - "/jarvis/database:/home/couchdb/data"
             - "/jarvis:/jarvis"
         restart: "always"
-        command: "/starter"
+        command: "/bin/bash /starter"
         hostname: jarvis
-        container_name: jarvis_full
+        container_name: jarvis-server-and-web
     updater:
-        image: "openjarvis/updater"
+        image: "openjarvis/autoupdate"
         volumes:
             - "/jarvis:/jarvis"
-        command: "/starter"
+        command: "/bin/bash /starter"
+        network_mode: host
         depends_on:
             - jarvis
+        hostname: jarvis-updater
+        container_name: jarvis-autoupdate
+    
