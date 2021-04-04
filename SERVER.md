@@ -1,19 +1,19 @@
 # Docker Jarvis Server
 
-TODO
+Docker Container for Jarvis Server and Web App
 
 ## Developers
 
 To reproduce the server container run the following commands:
 
-
 ``` bash
-docker run -it -t debian /bin/bash
+# START: 11:10:00
+docker run -it -v "/jarvis:/jarvis" --name "jarvis" -t debian /bin/bash
 
 apt update
 apt install -y git curl wget python3 python3-pip mosquitto python3-paho-mqtt sudo
 
-pip3 install --upgrade --no-deps open-jarvis pyOpenSSL couchdb2
+pip3 install --upgrade --no-deps open-jarvis requests packaging urllib3 chardet certifi idna
 
 wget http://packages.erlang-solutions.com/debian/erlang_solutions.asc
 apt-key add erlang_solutions.asc
@@ -74,6 +74,7 @@ cd ./rel/couchdb/
 sudo cp -Rp * $COUCHDB_DIR
 sudo chown -R couchdb:couchdb $COUCHDB_DIR
 cd $COUCHDB_DIR/etc
+echo "jarvis = jarvis" >> $COUCHDB_DIR/etc/local.ini
 
 # change access rights
 sudo chmod 666 $COUCHDB_DIR/etc/local.ini
@@ -107,7 +108,7 @@ wget https://github.com/pekrau/CouchDB2/blob/master/couchdb2.py?raw=true -O /usr
 
 git clone https://github.com/open-jarvis/server
 cd server
-python3 setup.py
+python3 setup.py --blind
 
 echo "/home/couchdb/bin/couchdb &" > /starter
 echo "/usr/sbin/mosquitto &" >> /starter
@@ -119,7 +120,21 @@ git clone https://github.com/open-jarvis/web .
 pip3 install flask flask_babel
 
 echo "/usr/bin/python3 /jarvis/web/html/webui.py &" >> /starter
+echo "/bin/sleep infinity" >> /starter
 
 chmod a+x /starter
+
+# clean up
+rm -rf /root/.cache/*
+rm -rf /root/*.whl
+rm -rf /apache-couchdb-3.1.1* /erlang_solutions.asc /*.deb
+apt install wajig
+# END: --:--:--
+# TOOK: --:--:--
+# check large packages with `wajig large`
+
+apt purge git curl wget wajig
+apt clean
+apt autoremove
 ```
 

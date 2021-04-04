@@ -1,13 +1,15 @@
 # Docker Jarvis Autoupdate
 
-TODO
+Automatically updates your Jarvis application
 
 ## Developers
 
 To reproduce the server container run the following commands:
 
 ```bash
-docker run -it -v "/jarvis:/jarvis" -p "5984:5984" -p "1883:1883" -t debian /bin/bash
+docker run -it -v "/jarvis:/jarvis" --name "autoupdate" -t debian /bin/bash
+
+# INSTALLATION START:
 
 # install data
 apt update
