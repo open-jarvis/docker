@@ -7,13 +7,14 @@ Docker Container for Jarvis Server and Web App
 To reproduce the server container run the following commands:
 
 ``` bash
-# START: 11:10:00
-docker run -it -v "/jarvis:/jarvis" --name "jarvis" -t debian /bin/bash
+docker run -it --name "jarvis" -t debian /bin/bash
+
+set -x
 
 apt update
-apt install -y git curl wget python3 python3-pip mosquitto python3-paho-mqtt sudo
+apt install --no-install-recommends -y git curl wget python3 python3-pip mosquitto python3-paho-mqtt sudo gnupg2
 
-pip3 install --upgrade --no-deps open-jarvis requests packaging urllib3 chardet certifi idna
+pip3 install --upgrade --no-deps open-jarvis requests packaging urllib3 chardet certifi idna markdown importlib_metadata zipp typing_extensions
 
 wget http://packages.erlang-solutions.com/debian/erlang_solutions.asc
 apt-key add erlang_solutions.asc
@@ -79,7 +80,8 @@ echo "jarvis = jarvis" >> $COUCHDB_DIR/etc/local.ini
 # change access rights
 sudo chmod 666 $COUCHDB_DIR/etc/local.ini
 
-apt install libatlas3-base libgfortran5
+apt install --no-install-recommends -y libatlas3-base libgfortran5 python3-dev
+pip3 install setuptools wheel
 
 cd /root
 wget --content-disposition https://github.com/jr-k/snips-nlu-rebirth/blob/master/wheels/scipy-1.3.3-cp37-cp37m-linux_armv7l.whl?raw=true
@@ -103,9 +105,7 @@ wget https://github.com/pekrau/CouchDB2/blob/master/couchdb2.py?raw=true -O /usr
 
 /home/couchdb/bin/couchdb &
 
-# THIS IS WHERE WE PULL STUFF FROM THE 
-# JARVIS REPOS
-
+# INSTALLING JARVIS SERVER
 git clone https://github.com/open-jarvis/server
 cd server
 python3 setup.py --blind
@@ -115,6 +115,7 @@ echo "/usr/sbin/mosquitto &" >> /starter
 echo "/bin/sleep 3" >> /starter
 echo "/usr/bin/python3 /jarvis/server/jarvisd.py &" >> /starter
 
+# INSTALLING JARVIS WEB
 cd /jarvis/web
 git clone https://github.com/open-jarvis/web .
 pip3 install flask flask_babel
@@ -124,17 +125,20 @@ echo "/bin/sleep infinity" >> /starter
 
 chmod a+x /starter
 
+kill `pidof beam.smp`
+
 # clean up
 rm -rf /root/.cache/*
 rm -rf /root/*.whl
 rm -rf /apache-couchdb-3.1.1* /erlang_solutions.asc /*.deb
-apt install wajig
-# END: --:--:--
-# TOOK: --:--:--
-# check large packages with `wajig large`
 
-apt purge git curl wget wajig
+# apt install --no-install-recommends wajig
+# CHECK LARGE PACKAGES
+# apt purge wajig
+
+apt purge libgl1-mesa-dri adwaita-icon-theme git libgtk2.0-common libwxgtk3.0-0v5 libgtk2.0-0 wget fonts-dejavu-core libglib2.0-0 make libx11-data curl
 apt clean
-apt autoremove
+apt autoremove -y
+rm -rf /usr/share/fonts
 ```
 
