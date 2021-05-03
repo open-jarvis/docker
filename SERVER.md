@@ -20,7 +20,17 @@ wget http://packages.erlang-solutions.com/debian/erlang_solutions.asc
 apt-key add erlang_solutions.asc
 apt update
 
+# @@@@@@@@@@@@@@@@   ADM64   @@@@@@@@@@@@@@@@@@@@@
+# curl -L https://couchdb.apache.org/repo/bintray-pubkey.asc   | sudo apt-key add -
+# echo "deb https://apache.bintray.com/couchdb-deb focal main" >> /etc/apt/sources.list
+# apt update
+# apt install apache2 couchdb -y
+# echo "service couchdb start" > /starter
+# echo "jarvis = jarvis" >> /opt/couchdb/etc/local.ini
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+
+# @@@@@@@@@@@@@@@@   ARMHF   @@@@@@@@@@@@@@@@@@@@@
 # Download libffi6
 wget http://ftp.br.debian.org/debian/pool/main/libf/libffi/libffi6_3.2.1-6_armhf.deb
 
