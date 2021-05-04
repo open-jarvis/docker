@@ -25,8 +25,13 @@ apt update
 # echo "deb https://apache.bintray.com/couchdb-deb focal main" >> /etc/apt/sources.list
 # apt update
 # apt install apache2 couchdb -y
-# echo "service couchdb start" > /starter
 # echo "jarvis = jarvis" >> /opt/couchdb/etc/local.ini
+# pip3 install snips_nlu
+# pip3 install couchdb2
+# echo "service couchdb start" > /starter
+# echo "service mosquitto start" >> /starter
+# service couchdb start
+# curl -X PUT http://admin:admin@127.0.0.1:5984/_node/couchdb@127.0.0.1/_config/admins/jarvis -d '"jarvis"'
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -106,22 +111,27 @@ sudo pip3 install snips_nlu_utils-0.9.1-cp37-cp37m-linux_armv7l.whl
 sudo pip3 install snips_nlu_parsers-0.4.3-cp37-cp37m-linux_armv7l.whl
 sudo pip3 install snips_nlu-0.20.2-py3-none-any.whl
 
-sudo snips-nlu download de
-sudo snips-nlu download en
-
 mkdir /usr/local/lib/python3.7/dist-packages/couchdb2
 echo "from .couchdb2 import *" > /usr/local/lib/python3.7/dist-packages/couchdb2/__init__.py
 wget https://github.com/pekrau/CouchDB2/blob/master/couchdb2.py?raw=true -O /usr/local/lib/python3.7/dist-packages/couchdb2/couchdb2.py
+# mkdir /usr/local/lib/python3.6/dist-packages/couchdb2
+# echo "from .couchdb2 import *" > /usr/local/lib/python3.6/dist-packages/couchdb2/__init__.py
+# wget https://github.com/pekrau/CouchDB2/blob/master/couchdb2.py?raw=true -O /usr/local/lib/python3.6/dist-packages/couchdb2/couchdb2.py
 
 /home/couchdb/bin/couchdb &
+
+echo "/home/couchdb/bin/couchdb &" > /starter
+echo "/usr/sbin/mosquitto &" >> /starter
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+sudo snips-nlu download de
+sudo snips-nlu download en
 
 # INSTALLING JARVIS SERVER
 git clone https://github.com/open-jarvis/server
 cd server
 python3 setup.py --blind
 
-echo "/home/couchdb/bin/couchdb &" > /starter
-echo "/usr/sbin/mosquitto &" >> /starter
 echo "/bin/sleep 3" >> /starter
 echo "/usr/bin/python3 /jarvis/server/jarvisd.py &" >> /starter
 
@@ -146,7 +156,7 @@ rm -rf /apache-couchdb-3.1.1* /erlang_solutions.asc /*.deb
 # CHECK LARGE PACKAGES
 # apt purge wajig
 
-apt purge libgl1-mesa-dri adwaita-icon-theme git libgtk2.0-common libwxgtk3.0-0v5 libgtk2.0-0 wget fonts-dejavu-core libglib2.0-0 make libx11-data curl
+dpkg --purge libgl1-mesa-dri adwaita-icon-theme git libgtk2.0-common libwxgtk3.0-0v5 libgtk2.0-0 wget fonts-dejavu-core libglib2.0-0 make libx11-data curl
 apt clean
 apt autoremove -y
 rm -rf /usr/share/fonts
