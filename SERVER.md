@@ -21,6 +21,33 @@ apt-key add erlang_solutions.asc
 apt update
 
 # @@@@@@@@@@@@@@@@   ADM64   @@@@@@@@@@@@@@@@@@@@@
+    1  apt update ; apt install -y python3 python3-pip
+    2  echo "deb https://apache.bintray.com/couchdb-deb buster main" | tee -a /etc/apt/sources.list
+    3  apt install curl
+    4  curl -L https://couchdb.apache.org/repo/bintray-pubkey.asc | apt-key add -
+    5  apt updaet
+    6  apt update
+    7  apt install couchdb
+    8  apt install mosquitto python3-paho-mqtt git
+    9  couchdb
+   10  service status couchdb
+   11  service couchdb status
+   12  service couchdb start
+   13  service couchdb status
+   14  service mosquitto status
+   15  service mosquitto start
+   16  service mosquitto status
+   17  history
+   18  pip3 install --upgrade --no-deps open-jarvis requests packaging urllib3 chardet certifi idna markdown importlib_metadata zipp typing_extensions
+   19  pip3 install --upgrade --no-deps open-jarvis requests packaging urllib3 chardet certifi idna markdown importlib_metadata zipp typing_extensions cryptography rsa paho.mqtt couchdb2 snips_nlu
+   20  pip3 install --upgrade --no-deps open-jarvis requests packaging urllib3 chardet certifi idna markdown importlib_metadata zipp typing_extensions cryptography rsa couchdb2 snips_nlu
+   21  python3 -m pip install --upgrade pip
+   22  pip3 install --upgrade --no-deps open-jarvis requests packaging urllib3 chardet certifi idna markdown importlib_metadata zipp typing_extensions cryptography rsa couchdb2 snips_nlu
+   23  exit
+   24  ls
+   25  history
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# @@@@@@@@@@@@@@@@   ADM64   @@@@@@@@@@@@@@@@@@@@@
 # curl -L https://couchdb.apache.org/repo/bintray-pubkey.asc   | sudo apt-key add -
 # echo "deb https://apache.bintray.com/couchdb-deb focal main" >> /etc/apt/sources.list
 # apt update
@@ -33,6 +60,7 @@ apt update
 # service couchdb start
 # curl -X PUT http://admin:admin@127.0.0.1:5984/_node/couchdb@127.0.0.1/_config/admins/jarvis -d '"jarvis"'
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 
 
 # @@@@@@@@@@@@@@@@   ARMHF   @@@@@@@@@@@@@@@@@@@@@
