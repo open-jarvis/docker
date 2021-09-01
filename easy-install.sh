@@ -26,7 +26,8 @@ install_64_bit () {
     apt install -y python3 python3-pip
     python3 -m pip install -e /jarvis/pip
     python3 -m pip install -e /jarvis/sdk
-    python3 -m pip install --upgrade websockets snips_nlu psutil markdown text2num
+    python3 -m pip install -r /jarvis/server/requirements.txt
+    python3 -m pip install -r /jarvis/web/requirements.txt
 
     python3 -m snips_nlu download en
     python3 -m snips_nlu download de
